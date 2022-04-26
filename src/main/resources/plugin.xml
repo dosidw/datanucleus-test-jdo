@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.cache_level1">
+        <cache name="NoClearLevel1Cache" class-name="myplugin.NoClearLevel1Cache"/>
+    </extension>
+</plugin>
+

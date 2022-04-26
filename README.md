@@ -1,6 +1,14 @@
 test-jdo
 ========
 
+# dosi-issue-01
+After `pm.evictAll()` the first call to a object field will return null, later ones work.
+Added L1 cache without `clear()`, but commented out in persistence.xml, since this was not the issue.
+
+Issue seems to be: field with `fetch-fk-only` and level 2 cache turned off.
+
+# original:
+
 Template project for any user testcase using JDO.
 To create a DataNucleus test simply fork this project, and add/edit as 
 necessary to add your model and persistence commands. The files that you'll likely need to edit are
