@@ -26,7 +26,7 @@ public class SimpleTest
             tx.begin();
             ent = new Enterprise(1, "Ent1");
             pm.makePersistent(ent);
-            for (int i = 1; i < 10001; i++) {
+            for (int i = 1; i <= 1; i++) {
                 pers = new Person(i, "Person" + i, ent);
                 pm.makePersistent(pers);
             }
@@ -35,6 +35,9 @@ public class SimpleTest
             //pm.evict(ent);
             //pm.evict(pers);
             pm.evictAll();
+            
+            //with this it works, since only first call gives null
+            //assertNull(pers.getEnterprise());
             
             // fails if fetch-fk-only and no level 2 cache!!!!!
             assertNotNull(pers.getEnterprise());
