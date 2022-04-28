@@ -1,6 +1,19 @@
 test-jdo
 ========
 
+# contains creating OR-query example
+
+If the collection used in a query as parameter is of a db object type, it seems to create OR instead of IN queries.
+Neither the IN nor the OR queries are parameterized.
+
+Parts of log for the OR queries:
+
+	Parameter ParameterExpression{param} is being resolved as a literal, so the query is no longer precompilable
+	Not caching the datastore compilation since some parameters are evaluated during the compilation and arent present in the final datastore-specific query
+	SELECT 'mydomain.model.PersonData' AS DN_TYPE,A0.ID,A0."NAME" FROM PERSONDATA A0 WHERE (1 = A0.PERSON_ID_OID OR 2 = A0.PERSON_ID_OID OR 3 = A0.PERSON_ID_OID OR 4 = A0.PERSON_ID_OID)
+
+# original:
+
 Template project for any user testcase using JDO.
 To create a DataNucleus test simply fork this project, and add/edit as 
 necessary to add your model and persistence commands. The files that you'll likely need to edit are
