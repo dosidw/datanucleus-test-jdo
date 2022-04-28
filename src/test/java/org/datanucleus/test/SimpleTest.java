@@ -17,7 +17,9 @@ public class SimpleTest
         PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("MyTest");
 
         Enterprise ent = null;
-        Person pers = null;
+        int numPersons = 10;
+        List<Person> persons = new ArrayList<>();
+        List<PersonData> personDatas = new ArrayList<>();
         
         PersistenceManager pm = pmf.getPersistenceManager();
         Transaction tx = pm.currentTransaction();
@@ -26,35 +28,44 @@ public class SimpleTest
             tx.begin();
             ent = new Enterprise(1, "Ent1");
             pm.makePersistent(ent);
-            for (int i = 1; i <= 1; i++) {
-                pers = new Person(i, "Person" + i, ent);
-                pm.makePersistent(pers);
+            for (int i = 1; i <= numPersons; i++) {
+                Person p = new Person(i, "Person" + i, ent);
+                PersonData pd = new PersonData(i, "Data" + i, p);
+                pm.makePersistent(p);
+                pm.makePersistent(pd);
+                persons.add(p);
+                personDatas.add(pd);
             }
             tx.commit();
             
-            //pm.evict(ent);
-            //pm.evict(pers);
             pm.evictAll();
             
-            //with this it works, since only first call gives null
-            //assertNull(pers.getEnterprise());
+            assertNotNull(persons.get(0).getEnterprise());
+            assertNotNull(personDatas.get(0).getPerson());
             
-            // fails if fetch-fk-only and no level 2 cache!!!!!
-            assertNotNull(pers.getEnterprise());
-
-            //if I do this, then query will fail with: javax.jdo.JDOUserException: Exception thrown while loading remaining rows of query
-            //java.lang.NullPointerException at org.datanucleus.state.StateManagerImpl.getLoadedFields(StateManagerImpl.java:1658)
-            //pm.close();
+            //setup fetch group
+            String fgName = "in-test-fg";
+            String field = "person";
+            FetchGroup fg = pm.getFetchGroup(PersonData.class, fgName);
+            fg.addMember(field);
+            fg.setRecursionDepth(field, 5);
+            pm.getFetchPlan().addGroup(fgName);
             
+            NucleusLogger.GENERAL.info(">> Starting query");
+            //use in query:
+            Query q = pm.newQuery(PersonData.class);
+            Collection<PersonData> result = (Collection<PersonData>) q.execute();
+            int count = 0;
+            for (PersonData pd: result) {
+                // should not trigger query:
+                pd.getPerson().getName();
+                count++;
+            }
             
-            //not needed, fails above already
-//            pm = pmf.getPersistenceManager();
-//            Query q = pm.newQuery(Person.class);
-//            Collection<Person> persons = (Collection<Person>) q.execute();
-//            for (Person p: persons) {
-//                assertNotNull(p.getEnterprise());
-//            }
-//            q.closeAll();
+            NucleusLogger.GENERAL.info(">> Got num results: " + count);
+            
+            //cleanup fetch group
+            pm.getFetchPlan().removeGroup(fgName);
         }
         catch (Throwable thr)
         {

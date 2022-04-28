@@ -1,16 +1,13 @@
 test-jdo
 ========
 
-# contains creating OR-query example
+# dosi-issue-02_fetch_groups
 
-If the collection used in a query as parameter is of a db object type, it seems to create OR instead of IN queries.
-Neither the IN nor the OR queries are parameterized.
+We have `fetch-fk-only` but want to get full objects with custom fetch groups. Setting `recursionDepth` on a custom fetch group for a
+query does not win vs `fetch-fk-only` currently, so it just retrieves the FK.
 
-Parts of log for the OR queries:
-
-	Parameter ParameterExpression{param} is being resolved as a literal, so the query is no longer precompilable
-	Not caching the datastore compilation since some parameters are evaluated during the compilation and arent present in the final datastore-specific query
-	SELECT 'mydomain.model.PersonData' AS DN_TYPE,A0.ID,A0."NAME" FROM PERSONDATA A0 WHERE (1 = A0.PERSON_ID_OID OR 2 = A0.PERSON_ID_OID OR 3 = A0.PERSON_ID_OID OR 4 = A0.PERSON_ID_OID)
+The `recursionDepth` we set on the fetch group seems never read by the code during execution of such queries, at least it
+looks like that in the debugger.
 
 # original:
 
