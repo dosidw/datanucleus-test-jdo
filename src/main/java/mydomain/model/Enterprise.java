@@ -3,21 +3,17 @@ package mydomain.model;
 import javax.jdo.annotations.*;
 
 @PersistenceCapable(detachable="true")
-public class Person
+public class Enterprise
 {
     @PrimaryKey
     Long id;
 
     String name;
 
-    @Extension(vendorName="datanucleus", key="fetch-fk-only", value="true")
-    Enterprise enterprise;
-    
-    public Person(long id, String name, Enterprise ent)
+    public Enterprise(long id, String name)
     {
         this.id = id;
         this.name = name;
-        this.enterprise = ent;
     }
 
     public Long getId()
@@ -28,10 +24,5 @@ public class Person
     public String getName()
     {
         return name;
-    }
-    
-    public Enterprise getEnterprise()
-    {
-        return enterprise;
     }
 }
