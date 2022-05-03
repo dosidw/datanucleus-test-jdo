@@ -7,6 +7,17 @@ Getting the same data again is much slower when using `fetch-fk-only`/`recursion
 
 It seems to get data for fields that it should not (possible by separate queries).
 
+NOTE: the test closes the PM, remove that to run without changes in DN. Closing the DN seems to be a problem with our custom Level 1 cache.
+The cache is recycled for the next PM (ExecutionContextImpl), but our cache does nothing on `clear()`
+
+To fix that change ExecutionContextImpl:
+
+`cache.clear();`
+
+to:
+
+`initialiseLevel1Cache();`
+
 # original:
 
 Template project for any user testcase using JDO.
