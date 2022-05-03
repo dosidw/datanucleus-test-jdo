@@ -1,13 +1,11 @@
 test-jdo
 ========
 
-# dosi-issue-02_fetch_groups
+# dosi-issue-03_second_query_slower
 
-We have `fetch-fk-only` but want to get full objects with custom fetch groups. Setting `recursionDepth` on a custom fetch group for a
-query does not win vs `fetch-fk-only` currently, so it just retrieves the FK.
+Getting the same data again is much slower when using `fetch-fk-only`/`recursion-depth=0`
 
-The `recursionDepth` we set on the fetch group seems never read by the code during execution of such queries, at least it
-looks like that in the debugger.
+It seems to get data for fields that it should not (possible by separate queries).
 
 # original:
 

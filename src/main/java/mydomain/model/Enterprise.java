@@ -2,27 +2,27 @@ package mydomain.model;
 
 import javax.jdo.annotations.*;
 
-@PersistenceCapable(detachable="true")
+@PersistenceCapable
 public class Enterprise
 {
     @PrimaryKey
-    Long id;
+    Long entId;
 
-    String name;
+    String entName;
 
     public Enterprise(long id, String name)
     {
-        this.id = id;
-        this.name = name;
+        this.entId = id;
+        this.entName = name;
     }
 
     public Long getId()
     {
-        return id;
+        return entId;
     }
 
     public String getName()
     {
-        return name;
+        return entName;
     }
 }

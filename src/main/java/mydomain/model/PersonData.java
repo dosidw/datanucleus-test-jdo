@@ -2,35 +2,50 @@ package mydomain.model;
 
 import javax.jdo.annotations.*;
 
-@PersistenceCapable(detachable="true")
+//@FetchGroup(name = "default", members = {@Persistent(name="enterprise", recursionDepth = 0)})
+@PersistenceCapable
 public class PersonData
 {
     @PrimaryKey
-    Long id;
+    Long dataId;
 
-    String name;
+    String dataName;
     
+    //@Persistent(defaultFetchGroup="true", recursionDepth = 0)
+    @Persistent(defaultFetchGroup="true")
     @Extension(vendorName="datanucleus", key="fetch-fk-only", value="true")
-    Person person;
+    Person dataPerson;
+    
+    //needed hack to allow 0, there is code that turns it into 1. Also java doc says only works on fetch group usage, but seems to work
+    //@Persistent(defaultFetchGroup="true", recursionDepth = 0)
+    @Persistent(defaultFetchGroup="true")
+    @Extension(vendorName="datanucleus", key="fetch-fk-only", value="true")
+    //@Persistent(defaultFetchGroup="true", extensions = { @Extension(vendorName="datanucleus", key="fetch-fk-only", value="true") })
+    Enterprise dataEnterprise;
 
-    public PersonData(long id, String name, Person person)
+    public PersonData(long id, String name, Person person, Enterprise ent)
     {
-        this.id = id;
-        this.name = name;
-        this.person = person;
+        this.dataId = id;
+        this.dataName = name;
+        this.dataPerson = person;
+        this.dataEnterprise = ent;
     }
 
     public Long getId()
     {
-        return id;
+        return dataId;
     }
 
     public String getName()
     {
-        return name;
+        return dataName;
     }
     
     public Person getPerson() {
-        return person;
+        return dataPerson;
+    }
+    
+    public Enterprise getEnterprise() {
+        return dataEnterprise;
     }
 }

@@ -2,36 +2,38 @@ package mydomain.model;
 
 import javax.jdo.annotations.*;
 
-@PersistenceCapable(detachable="true")
+@PersistenceCapable
 public class Person
 {
     @PrimaryKey
-    Long id;
+    Long perId;
 
-    String name;
+    String perName;
 
+    //@Persistent(defaultFetchGroup="true", recursionDepth = 0)
+    @Persistent(defaultFetchGroup="true")
     @Extension(vendorName="datanucleus", key="fetch-fk-only", value="true")
-    Enterprise enterprise;
+    Enterprise perEnterprise;
     
     public Person(long id, String name, Enterprise ent)
     {
-        this.id = id;
-        this.name = name;
-        this.enterprise = ent;
+        this.perId = id;
+        this.perName = name;
+        this.perEnterprise = ent;
     }
 
     public Long getId()
     {
-        return id;
+        return perId;
     }
 
     public String getName()
     {
-        return name;
+        return perName;
     }
     
     public Enterprise getEnterprise()
     {
-        return enterprise;
+        return perEnterprise;
     }
 }
