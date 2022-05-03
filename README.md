@@ -5,7 +5,9 @@ test-jdo
 
 Getting the same data again is much slower when using `fetch-fk-only`/`recursion-depth=0`
 
-It seems to get data for fields that it should not (possible by separate queries).
+After an object is evicted, a query for that object will load it. But access to FK fields will trigger a query loading the just retrieved FKs again.
+
+This is related to our custom Level 1 cache that does nothing on `clear()`.
 
 NOTE: the test closes the PM, remove that to run without changes in DN. Closing the DN seems to be a problem with our custom Level 1 cache.
 The cache is recycled for the next PM (ExecutionContextImpl), but our cache does nothing on `clear()`
